@@ -97,6 +97,7 @@ Eigen::Matrix4f get_rotation(Vector3f axis, float angle)
 
 /*
 //使用罗德里格斯旋转公式进行计算
+//参考网上做法，实际运行报错，主要是提醒相应的公式
 Eigen::Matrix4f get_rotate_matrix(Vector3f v, float angle)
 {
     Eigen::Matrix3f E = Eigen::Matrix4f::Identity();
@@ -140,7 +141,8 @@ int main(int argc, const char** argv)
     if (command_line) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
-        r.set_model(get_model_matrix(angle));
+        //r.set_model(get_model_matrix(angle));
+        r.set_model(get_rotation(Vector3f(1,0,0),angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
 
@@ -156,7 +158,8 @@ int main(int argc, const char** argv)
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
-        r.set_model(get_model_matrix(angle));
+        // r.set_model(get_model_matrix(angle));
+        r.set_model(get_rotation(Vector3f(1,0,0),angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
 
