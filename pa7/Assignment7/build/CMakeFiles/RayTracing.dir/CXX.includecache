@@ -103,6 +103,12 @@ Scene.hpp
 /home/cs18/Documents/pa7/Assignment7/Scene.hpp
 Renderer.hpp
 /home/cs18/Documents/pa7/Assignment7/Renderer.hpp
+omp.h
+-
+thread
+-
+mutex
+-
 
 /home/cs18/Documents/pa7/Assignment7/Renderer.hpp
 Scene.hpp

@@ -5,6 +5,35 @@
 #include <fstream>
 #include "Scene.hpp"
 #include "Renderer.hpp"
+#include<omp.h>
+#include<thread>
+#include<mutex>
+
+int prog = 0;
+omp_lock_t lock;
+
+
+void para(Vector3f eye_pos, std::vector<Vector3f> &framebuffer, const Scene& scene, int spp, float imageAspectRatio, float scale, int start, int end){
+    int width, height;
+    width = height = sqrt(spp);
+    float step = 1.0f / width;
+    for (uint32_t j = start; j < end; ++j) {
+        for (uint32_t i = 0; i < scene.width; ++i) {
+            // generate primary ray direction   
+            for (int k = 0; k < spp; k++){
+                float x = (2 * (i + step / 2 + step * (k % width)) / (float)scene.width - 1) *
+                        imageAspectRatio * scale;
+                float y = (1 - 2 * (j + step / 2 + step * (k / height)) / (float)scene.height) * scale;
+                Vector3f dir = normalize(Vector3f(-x, y, 1));
+                framebuffer[j * scene.width + i] += scene.castRay(Ray(eye_pos, dir), 0) / spp;  
+            }
+        }
+     	omp_set_lock(&lock);
+        prog++;
+        UpdateProgress(prog / (float)scene.height);
+        omp_unset_lock(&lock);
+    }
+}
 
 
 inline float deg2rad(const float& deg) { return deg * M_PI / 180.0; }
@@ -24,23 +53,35 @@ void Renderer::Render(const Scene& scene)
     int m = 0;
 
     // change the spp value to change sample ammount
-    int spp = 16;
-    std::cout << "SPP: " << spp << "\n";
-    for (uint32_t j = 0; j < scene.height; ++j) {
-        for (uint32_t i = 0; i < scene.width; ++i) {
-            // generate primary ray direction
-            float x = (2 * (i + 0.5) / (float)scene.width - 1) *
-                      imageAspectRatio * scale;
-            float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
+    // int spp = 16;
+    // std::cout << "SPP: " << spp << "\n";
+    // for (uint32_t j = 0; j < scene.height; ++j) {
+    //     for (uint32_t i = 0; i < scene.width; ++i) {
+    //         // generate primary ray direction
+    //         float x = (2 * (i + 0.5) / (float)scene.width - 1) *
+    //                   imageAspectRatio * scale;
+    //         float y = (1 - 2 * (j + 0.5) / (float)scene.height) * scale;
 
-            Vector3f dir = normalize(Vector3f(-x, y, 1));
-            for (int k = 0; k < spp; k++){
-                framebuffer[m] += scene.castRay(Ray(eye_pos, dir), 0) / spp;  
-            }
-            m++;
-        }
-        UpdateProgress(j / (float)scene.height);
-    }
+    //         Vector3f dir = normalize(Vector3f(-x, y, 1));
+    //         for (int k = 0; k < spp; k++){
+    //             framebuffer[m] += scene.castRay(Ray(eye_pos, dir), 0) / spp;  
+    //         }
+    //         m++;
+    //     }
+    //     UpdateProgress(j / (float)scene.height);
+    // }
+    // UpdateProgress(1.f);
+
+    int thread_num = 32;
+    int thread_step = scene.height / thread_num;
+    std::vector<std::thread> rays;
+    // change the spp value to change sample ammount
+    int spp = 256;
+    std::cout << "SPP: " << spp << "\n";
+    #pragma omp parallel for
+        for (int i = 0; i < thread_num; i++) 
+            para(eye_pos, std::ref(framebuffer), std::ref(scene), spp, 
+                    imageAspectRatio, scale, i * thread_step, (i + 1) * thread_step);
     UpdateProgress(1.f);
 
     // save framebuffer to file
