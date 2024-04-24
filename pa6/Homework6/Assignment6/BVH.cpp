@@ -118,9 +118,9 @@ Intersection BVHAccel::getIntersection(BVHBuildNode* node, const Ray& ray) const
     
     // 确定射线在各个轴上的方向，用于判断射线与包围盒相交时的情况
     std::array<int, 3> dirIsNeg;
-    dirIsNeg[0] = (ray.direction.x >0);
-    dirIsNeg[1] = (ray.direction.y > 0);
-    dirIsNeg[2] = (ray.direction.z > 0);
+    dirIsNeg[0] = (ray.direction.x<0);
+    dirIsNeg[1] = (ray.direction.y < 0);
+    dirIsNeg[2] = (ray.direction.z < 0);
        
     // 判断射线是否与当前节点的包围盒相交
     if (!node->bounds.IntersectP(ray, invDir, dirIsNeg))

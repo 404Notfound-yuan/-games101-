@@ -117,19 +117,19 @@ inline bool Bounds3::IntersectP(const Ray& ray, const Vector3f& invDir,
     float t_Max_z = (pMax.z - ray.origin.z)*invDir[2];
 
     //如果光线在负方向，则需要交换
-    if(!dirIsNeg[0])
+    if(dirIsNeg[0])
     {
         float t = t_Min_x;
         t_Min_x = t_Max_x;
         t_Max_x = t;
     }
-    if(!dirIsNeg[1])
+    if(dirIsNeg[1])
     {
         float t = t_Min_y;
         t_Min_y = t_Max_y;
         t_Max_y = t;
     }
-    if(!dirIsNeg[2])
+    if(dirIsNeg[2])
     {
         float t = t_Min_z;
         t_Min_z = t_Max_z;
