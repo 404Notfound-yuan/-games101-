@@ -35,33 +35,33 @@ public:
         return Eigen::Vector3f(color[0], color[1], color[2]);
     }
 
-//    Eigen::Vector3f getColorBilinear(float u, float v)
-//     {
-//         // 将输入坐标限制在 [0, 1] 范围内
-//         if (u < 0) u = 0;
-//         if (u > 1) u = 1;
-//         if (v < 0) v = 0;
-//         if (v > 1) v = 1;
+   Eigen::Vector3f getColorBilinear(float u, float v)
+    {
+        // 将输入坐标限制在 [0, 1] 范围内
+        if (u < 0) u = 0;
+        if (u > 1) u = 1;
+        if (v < 0) v = 0;
+        if (v > 1) v = 1;
 
-//         // 计算纹理图像中对应的浮点坐标
-//         auto u_img = u * width;
-//         auto v_img = (1 - v) * height;
+        // 计算纹理图像中对应的浮点坐标
+        auto u_img = u * width;
+        auto v_img = (1 - v) * height;
 
-//         // 获取四个相邻像素的颜色值
-//         Eigen::Vector3f color1 = getColor(u, v);
-//         Eigen::Vector3f color2 = getColor(u + 1.0f / width, v);
-//         Eigen::Vector3f color3 = getColor(u, v + 1.0f / height);
-//         Eigen::Vector3f color4 = getColor(u + 1.0f / width, v + 1.0f / height);
+        // 获取四个相邻像素的颜色值
+        Eigen::Vector3f color1 = getColor(u, v);
+        Eigen::Vector3f color2 = getColor(u + 1.0f / width, v);
+        Eigen::Vector3f color3 = getColor(u, v + 1.0f / height);
+        Eigen::Vector3f color4 = getColor(u + 1.0f / width, v + 1.0f / height);
 
-//         // 计算双线性插值结果
-//         float s = u_img - std::floor(u_img);
-//         float t = v_img - std::floor(v_img);
-//         Eigen::Vector3f color_top = color1 + (color2 - color1) * s;
-//         Eigen::Vector3f color_bottom = color3 + (color4 - color3) * s;
-//         Eigen::Vector3f interpolated_color = color_top + (color_bottom - color_top) * t;
+        // 计算双线性插值结果
+        float s = u_img - std::floor(u_img);
+        float t = v_img - std::floor(v_img);
+        Eigen::Vector3f color_top = color1 + (color2 - color1) * s;
+        Eigen::Vector3f color_bottom = color3 + (color4 - color3) * s;
+        Eigen::Vector3f interpolated_color = color_top + (color_bottom - color_top) * t;
 
-//         return interpolated_color;
-//     }
+        return interpolated_color;
+    }
 
     Eigen::Vector3f getColorBilinear(float u, float v){
         float w1 = int(u * width), h1 = int(v * height);
