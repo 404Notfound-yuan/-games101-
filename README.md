@@ -9,4 +9,4 @@
  
  	先摘抄一些多线程等的代码（方便更快查看渲染结果），等有时间再自己写
 
-	一个参考：[CSDN 博客](https://blog.csdn.net/ycrsw/article/details/124408789)
+	一个参考：https://blog.csdn.net/ycrsw/article/details/124408789
