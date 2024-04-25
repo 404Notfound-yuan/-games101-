@@ -10,3 +10,9 @@
  	先摘抄一些多线程等的代码（方便更快查看渲染结果），等有时间再自己写
 
 一个参考： https://blog.csdn.net/ycrsw/article/details/124408789
+
+## 2024/4/25 日志
+
+	PA8……之后有时间再写
+
+ games101课程笔记参考链接：https://blog.csdn.net/Motarookie/article/details/121638314
